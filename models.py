@@ -13,6 +13,19 @@ class Company(Base):
 
     freebies = relationship("Freebie", back_populates="company")
 
+    @property
+    def devs(self):
+        # Return unique Devs who have freebies from this company
+        return list({freebie.dev for freebie in self.freebies})
+
+    def give_freebie(self, dev, item_name, value):
+        new_freebie = Freebie(item_name=item_name, value=value, company=self, dev=dev)
+        return new_freebie
+
+    @classmethod
+    def oldest_company(cls, session):
+        return session.query(cls).order_by(cls.founding_year).first()
+
 
 class Dev(Base):
     __tablename__ = 'devs'
@@ -21,6 +34,22 @@ class Dev(Base):
     name = Column(String)
 
     freebies = relationship("Freebie", back_populates="dev")
+    
+    @property
+    def companies(self):
+        # Return unique Companies from which the dev has freebies
+        return list({freebie.company for freebie in self.freebies})
+
+    def received_one(self, item_name):
+        return any(freebie.item_name == item_name for freebie in self.freebies)
+
+    def give_away(self, new_dev, freebie):
+        if freebie.dev == self:
+            freebie.dev = new_dev
+            return freebie
+        else:
+            print("You can't give away a freebie you don't own!")
+            return None
 
 
 class Freebie(Base):

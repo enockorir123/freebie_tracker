@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+
+# SQLite database
+app.db
+
+# IPython history
+.ipynb_checkpoints/
+
+# Alembic caches
+migrations/versions/*.pyc
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
